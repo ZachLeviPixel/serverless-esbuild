@@ -77,7 +77,6 @@ See [example folder](examples) for some example configurations.
 | Esbuild Options        | This plugin can take almost any [Esbuild Javascript Build Option](https://esbuild.github.io/api/#build-api).                                                                                       | [Default Esbuild Options](#default-esbuild-options) |
 | `concurrency`          | The number of concurrent bundle operations to run at once. eg. `8`. _NOTE_: This can be memory intensive and could produce slower builds.                                                          | `Infinity`                                          |
 | `zipConcurrency`       | The number of concurrent zip operations to run at once. eg. `8`. _NOTE_: This can be memory intensive and could produce slower builds.                                                             | `Infinity`                                          |
-| `disableIncremental`   | Disables the use of esbuild `incremental` compilation.                                                                                                                                             | `false`                                             |
 | `exclude`              | An array of dependencies to exclude from the Lambda. This is passed to the esbuild `external` option. Set to `*` to disable packaging `node_modules`                                               | `['aws-sdk']`                                       |
 | `installExtraArgs`     | Optional arguments passed to npm or yarn for `external` dependency resolution. eg. `['--legacy-peer-deps']` for npm v7+ to use legacy `peerDependency` resolution behavior                         | `[]`                                                |
 | `keepOutputDirectory`  | Keeps the `.esbuild` output folder. Useful for debugging.                                                                                                                                          | `false`                                             |
@@ -100,7 +99,6 @@ The following `esbuild` options are automatically set.
 | ------------- | ---------- | ---------------------------------------------------------------------- |
 | `bundle`      | `true`     | Esbuild requires this for use with `external`                          |
 | `entryPoints` | N/A        | Cannot be overridden                                                   |
-| `incremental` | N/A        | Cannot be overridden. Use `disableIncremental` to disable it           |
 | `outDir`      | N/A        | Cannot be overridden                                                   |
 | `platform`    | `'node'`   | Set `format` to `esm` to enable ESM support                            |
 | `target`      | `'node16'` | We dynamically set this. See [Supported Runtimes](#supported-runtimes) |
@@ -365,6 +363,10 @@ This plugin supports the Serverless [Invoke Local](https://www.serverless.com/fr
       <td align="center" valign="top" width="14.28%"><a href="http://fredrikmollerstrand.se"><img src="https://avatars.githubusercontent.com/u/12793?v=4?s=70" width="70px;" alt="Fredrik Möllerstrand"/><br /><sub><b>Fredrik Möllerstrand</b></sub></a><br /><a href="https://github.com/floydspace/serverless-esbuild/commits?author=fredrik" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://thisisfashion.tv"><img src="https://avatars.githubusercontent.com/u/19397354?v=4?s=70" width="70px;" alt="Sander Kooger"/><br /><sub><b>Sander Kooger</b></sub></a><br /><a href="https://github.com/floydspace/serverless-esbuild/commits?author=sanderkooger" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://caffeinatedcoding.wordpress.com"><img src="https://avatars.githubusercontent.com/u/1588262?v=4?s=70" width="70px;" alt="Adam Swift"/><br /><sub><b>Adam Swift</b></sub></a><br /><a href="https://github.com/floydspace/serverless-esbuild/commits?author=Gleeble" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/fm-sz"><img src="https://avatars.githubusercontent.com/u/119663527?v=4?s=70" width="70px;" alt="Florian Mayer"/><br /><sub><b>Florian Mayer</b></sub></a><br /><a href="https://github.com/floydspace/serverless-esbuild/commits?author=fm-sz" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ZachLeviPixel"><img src="https://avatars.githubusercontent.com/u/131263652?v=4?s=70" width="70px;" alt="Zach Levi"/><br /><sub><b>Zach Levi</b></sub></a><br /><a href="https://github.com/floydspace/serverless-esbuild/commits?author=ZachLeviPixel" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

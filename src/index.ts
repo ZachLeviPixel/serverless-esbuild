@@ -134,7 +134,7 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
       },
       'before:offline:start': async () => {
         this.log.verbose('before:offline:start');
-        await this.bundle(true);
+        await this.bundle();
         await this.packExternalModules();
         await this.copyExtras();
         await this.preOffline();
@@ -142,7 +142,7 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
       },
       'before:offline:start:init': async () => {
         this.log.verbose('before:offline:start:init');
-        await this.bundle(true);
+        await this.bundle();
         await this.packExternalModules();
         await this.copyExtras();
         await this.preOffline();
@@ -159,6 +159,7 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
       },
       'after:package:createDeploymentArtifacts': async () => {
         this.log.verbose('after:package:createDeploymentArtifacts');
+        await this.disposeContexts();
         await this.cleanup();
       },
       'before:deploy:function:packageFunction': async () => {
@@ -170,6 +171,7 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
       },
       'after:deploy:function:packageFunction': async () => {
         this.log.verbose('after:deploy:function:packageFunction');
+        await this.disposeContexts();
         await this.cleanup();
       },
       'before:invoke:local:invoke': async () => {
@@ -178,6 +180,9 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
         await this.packExternalModules();
         await this.copyExtras();
         await this.preLocal();
+      },
+      'after:invoke:local:invoke': async () => {
+        await this.disposeContexts();
       },
     };
   }
@@ -358,8 +363,9 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
     };
 
     chokidar.watch(allPatterns, options).on('all', (eventName, srcPath) =>
-      this.bundle(true)
+      this.bundle()
         .then(() => this.updateFile(eventName, srcPath))
+        .then(() => this.notifyServerlessOffline())
         .then(() => this.log.verbose('Watching files for changes...'))
         .catch(() => this.log.error('Bundle error, waiting for a file change to reload...'))
     );
@@ -398,6 +404,10 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
         ...(patterns.length && { patterns }),
       };
     }
+  }
+
+  notifyServerlessOffline() {
+    this.serverless.pluginManager.spawn('offline:functionsUpdated');
   }
 
   async updateFile(op: string, filename: string) {
@@ -503,6 +513,14 @@ class EsbuildServerlessPlugin implements ServerlessPlugin {
     }
 
     service.package.artifact = path.join(SERVERLESS_FOLDER, path.basename(service.package.artifact));
+  }
+
+  async disposeContexts(): Promise<void> {
+    for (const { context } of Object.values(this.buildCache)) {
+      if (context) {
+        await context.dispose();
+      }
+    }
   }
 
   async cleanup(): Promise<void> {
